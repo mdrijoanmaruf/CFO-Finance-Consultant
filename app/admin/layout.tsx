@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#060e1c]/90 backdrop-blur-md border-r border-white/10 transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#060e1c]/40 border-r border-white/10 transition-transform duration-300 ease-in-out flex flex-col ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
@@ -172,7 +172,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       {/* Main Content Area */}
       <div className="lg:ml-64 flex-1 min-h-screen flex flex-col relative z-10 w-full">
         {/* Top Header */}
-        <header className="h-20 bg-[#060e1c]/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-30 px-6 lg:px-8 flex items-center justify-between shadow-sm w-full">
+        <header className="h-20 bg-[#060e1c]/40 border-b border-white/10 sticky top-0 z-30 px-6 lg:px-8 flex items-center justify-between shadow-sm w-full">
           {/* Left Side */}
           <div className="flex items-center gap-4">
             <button
