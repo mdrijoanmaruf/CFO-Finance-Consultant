@@ -230,8 +230,6 @@ export default function Navbar() {
         </div>
       </aside>
 
-      {/* Spacer so page content doesn't sit under the fixed navbar */}
-      <div className="h-[76px]" aria-hidden="true" />
     </>
   );
 }
