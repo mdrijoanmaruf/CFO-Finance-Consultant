@@ -36,16 +36,7 @@ interface Post {
   author: { name: string; photo?: string; avatar?: string } | null;
 }
 
-interface PendingPost {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  submittedByName: string;
-  readTime: number;
-  createdAt: string;
-  author: { name: string; photo?: string; avatar?: string } | null;
-}
+
 
 export default function AdminBlogPage() {
   const { data: session } = useSession();
@@ -119,9 +110,6 @@ export default function AdminBlogPage() {
   };
   
   const [deleting, setDeleting] = useState<string | null>(null);
-  const [pendingPosts, setPendingPosts] = useState<PendingPost[]>([]);
-  const [pendingLoading, setPendingLoading] = useState(true);
-  const [approving, setApproving] = useState<string | null>(null);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -139,51 +127,10 @@ export default function AdminBlogPage() {
     }
   };
 
-  const fetchPendingPosts = async () => {
-    if (!token) return;
-    setPendingLoading(true);
-    try {
-      const res = await fetch("/api/admin/blog-approvals", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (data.success) setPendingPosts(data.data);
-    } catch {
-      /* ignore */
-    } finally {
-      setPendingLoading(false);
-    }
-  };
 
-  const handleApproval = async (postId: string, action: "approve" | "reject") => {
-    setApproving(postId);
-    try {
-      const res = await fetch(`/api/admin/blog-approvals/${postId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ action }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(data.message, { style: { background: "#333", color: "#fff" }});
-        fetchPendingPosts();
-        if (action === "approve") fetchPosts();
-      } else {
-        toast.error(data.error || "Failed");
-      }
-    } catch {
-      toast.error("Failed to update post");
-    } finally {
-      setApproving(null);
-    }
-  };
 
   useEffect(() => {
     fetchPosts();
-    fetchPendingPosts();
   }, [token]);
 
   const confirmDeleteSwal = (id: string) => {
@@ -256,112 +203,7 @@ export default function AdminBlogPage() {
         </Link>
       </div>
 
-      {/* Pending Review section */}
-      {(pendingLoading || pendingPosts.length > 0) && (
-        <div className="bg-white/5 rounded-2xl border border-[#c8a96e]/30 shadow-xl overflow-hidden backdrop-blur-md">
-          <div className="px-5 py-4 bg-black/40 border-b border-[#c8a96e]/20 flex items-center gap-2">
-            <FiEdit3 className="w-4 h-4 text-[#c8a96e]" />
-            <h2 className="font-semibold text-[#c8a96e] text-sm tracking-wide uppercase">
-              Pending Writer Submissions
-            </h2>
-            {!pendingLoading && (
-              <span className="ml-auto text-[10px] font-bold px-2.5 py-1 bg-[#c8a96e]/20 text-[#c8a96e] rounded-full">
-                {pendingPosts.length}
-              </span>
-            )}
-          </div>
 
-          {pendingLoading ? (
-            <div className="divide-y divide-white/5">
-              {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="px-5 py-4 flex items-center justify-between">
-                  <div className="space-y-2 flex-1">
-                    <div className="h-4 bg-white/10 rounded animate-pulse w-2/5" />
-                    <div className="h-3 bg-white/5 rounded animate-pulse w-1/4" />
-                  </div>
-                  <div className="flex gap-2 ml-4">
-                    <div className="h-8 w-32 bg-white/10 rounded animate-pulse" />
-                    <div className="h-8 w-20 bg-white/10 rounded animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="divide-y divide-white/5">
-              {pendingPosts.map((post) => (
-                <div
-                  key={post._id}
-                  className="px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:bg-white/[0.02] transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="font-semibold text-white line-clamp-1">
-                      {post.title}
-                    </p>
-                    <p className="text-[11px] text-white/40 mt-1 flex items-center gap-2 flex-wrap">
-                      <span>by</span>
-                      {post.author?.avatar || post.author?.photo ? (
-                        <img
-                          src={post.author.avatar || post.author.photo}
-                          alt={post.submittedByName || post.author?.name}
-                          className="w-5 h-5 rounded-full object-cover shrink-0 border border-white/10"
-                        />
-                      ) : (
-                        <div className="w-5 h-5 rounded-full bg-white/5 border border-white/10 text-white/40 flex items-center justify-center text-[9px] font-bold">
-                          {(post.submittedByName || post.author?.name)?.charAt(0).toUpperCase() || "A"}
-                        </div>
-                      )}
-                      <span className="font-bold text-[#c8a96e]">
-                        {post.submittedByName || post.author?.name}
-                      </span>
-                      <span>·</span>
-                      <span>{post.readTime} min read</span>
-                      <span>·</span>
-                      <span>
-                        {new Date(post.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </p>
-                    <p className="text-[12px] text-white/30 mt-1 line-clamp-1 italic">
-                      "{post.excerpt}"
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => handleApproval(post._id, "approve")}
-                      disabled={approving === post._id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400/20 border border-emerald-400/20 rounded-lg transition-colors disabled:opacity-60 uppercase tracking-wider"
-                    >
-                      {approving === post._id ? (
-                        <FiLoader className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <FiCheck className="w-3.5 h-3.5" />
-                      )}
-                      Approve & Publish
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleApproval(post._id, "reject")}
-                      disabled={approving === post._id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-red-400 bg-red-400/10 hover:bg-red-400/20 border border-red-400/20 rounded-lg transition-colors disabled:opacity-60 uppercase tracking-wider"
-                    >
-                      {approving === post._id ? (
-                        <FiLoader className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <FiX className="w-3.5 h-3.5" />
-                      )}
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Table */}
       <div className="bg-white/5 border border-white/10 rounded-2xl shadow-xl overflow-hidden backdrop-blur-md">
