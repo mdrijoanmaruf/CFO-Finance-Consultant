@@ -2,6 +2,7 @@
 
 import { useState, useRef, ChangeEvent } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import BgAnimation from "@/Components/Shared/BG-Animation";
 
 export default function RegisterPage() {
@@ -12,6 +13,8 @@ export default function RegisterPage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handlePhoto = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,11 +37,43 @@ export default function RegisterPage() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError("");
     if (!validate()) return;
-    // TODO: wire up registration logic
-    console.log({ name, email, password, photoFile });
+    
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) {
+        setApiError(data.message || "Registration failed");
+        setIsLoading(false);
+        return;
+      }
+      
+      // Auto login after successful registration
+      const loginRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false, // We'll handle redirect manually if needed or let NextAuth redirect based on callbackUrl
+      });
+      
+      if (loginRes?.error) {
+        setApiError("Logged in failed after registration. Please log in manually.");
+        setIsLoading(false);
+      } else {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      setApiError("Something went wrong. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -90,11 +125,19 @@ export default function RegisterPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+              {apiError && (
+                <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm px-4 py-3 rounded-xl mb-2 text-center">
+                  {apiError}
+                </div>
+              )}
+
               {/* Google */}
               <button
                 type="button"
                 id="register-google-btn"
-                className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl text-sm font-medium text-white/80 border border-white/10 bg-white/4 hover:border-white/25 hover:bg-white/8 hover:text-white transition-all duration-300"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl text-sm font-medium text-white/80 border border-white/10 bg-white/4 hover:border-white/25 hover:bg-white/8 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-4.5 h-4.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -273,9 +316,10 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 id="register-submit-btn"
-                className="w-full mt-1 py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/20 hover:shadow-[#c8a96e]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                disabled={isLoading}
+                className="w-full mt-1 py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/20 hover:shadow-[#c8a96e]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
               >
-                Create Account
+                {isLoading ? "Creating Account..." : "Create Account"}
               </button>
 
             </form>

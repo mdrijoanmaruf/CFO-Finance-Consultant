@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import BgAnimation from "@/Components/Shared/BG-Animation";
 
 export default function LoginPage() {
@@ -9,6 +10,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = () => {
     const errs: typeof errors = {};
@@ -19,11 +22,29 @@ export default function LoginPage() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError("");
     if (!validate()) return;
-    // TODO: wire up login logic
-    console.log({ email, password });
+    
+    setIsLoading(true);
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setApiError(res.error === "CredentialsSignin" ? "Invalid email or password" : res.error);
+        setIsLoading(false);
+      } else {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      setApiError("Something went wrong. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,11 +96,19 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+              {apiError && (
+                <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm px-4 py-3 rounded-xl mb-2 text-center">
+                  {apiError}
+                </div>
+              )}
+
               {/* Google */}
               <button
                 type="button"
                 id="login-google-btn"
-                className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl text-sm font-medium text-white/80 border border-white/10 bg-white/4 hover:border-white/25 hover:bg-white/8 hover:text-white transition-all duration-300"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl text-sm font-medium text-white/80 border border-white/10 bg-white/4 hover:border-white/25 hover:bg-white/8 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-4.5 h-4.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -172,9 +201,10 @@ export default function LoginPage() {
               <button
                 type="submit"
                 id="login-submit-btn"
-                className="w-full mt-2 py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/20 hover:shadow-[#c8a96e]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                disabled={isLoading}
+                className="w-full mt-2 py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/20 hover:shadow-[#c8a96e]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
               >
-                Sign In
+                {isLoading ? "Signing In..." : "Sign In"}
               </button>
             </form>
 
