@@ -42,41 +42,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#060e1c] border-t border-white/8 text-white/70">
-      {/* Top CTA strip */}
-      <div className="bg-gradient-to-r from-[#0a1628] via-[#0f1f3d] to-[#0a1628] border-b border-white/8">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="text-[#c8a96e] text-xs tracking-[0.2em] uppercase font-semibold mb-1">
-              Ready to take the next step?
-            </p>
-            <h2 className="text-white text-2xl lg:text-3xl font-bold leading-snug">
-              Let&apos;s Discuss Your Business Challenge
-            </h2>
-          </div>
-          <Link
-            href="/contact"
-            id="footer-cta-btn"
-            className="shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold tracking-widest uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/20 hover:shadow-[#c8a96e]/40 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
-            </svg>
-            Request a Consultation
-          </Link>
-        </div>
-      </div>
-
       {/* Main footer body */}
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
         {/* Brand / About column */}
@@ -236,9 +201,22 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-xs text-white/35 text-center sm:text-left">
-          &copy; {year} MD. Al Amin Bhuiyan. All rights reserved.
-        </p>
+        <div className="flex flex-col items-center sm:items-start gap-1">
+          <p className="text-xs text-white/35 text-center sm:text-left">
+            &copy; {year} MD. Al Amin Bhuiyan. All rights reserved.
+          </p>
+          <p className="text-[11px] text-white/35 text-center sm:text-left">
+            Developed by{" "}
+            <a
+              href="https://rijoan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-[#c8a96e] transition-colors"
+            >
+              Md Rijoan Maruf
+            </a>
+          </p>
+        </div>
 
         <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
           {legalLinks.map((link, i) => (
