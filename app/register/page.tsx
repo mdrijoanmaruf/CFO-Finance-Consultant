@@ -4,6 +4,7 @@ import { useState, useRef, ChangeEvent } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import BgAnimation from "@/Components/Shared/BG-Animation";
+import { Alert, Toast } from "@/lib/swal";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -39,7 +40,6 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setApiError("");
     if (!validate()) return;
     
     setIsLoading(true);
@@ -52,7 +52,11 @@ export default function RegisterPage() {
       
       const data = await res.json();
       if (!res.ok) {
-        setApiError(data.message || "Registration failed");
+        Alert.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: data.message || "Something went wrong.",
+        });
         setIsLoading(false);
         return;
       }
@@ -61,17 +65,29 @@ export default function RegisterPage() {
       const loginRes = await signIn("credentials", {
         email,
         password,
-        redirect: false, // We'll handle redirect manually if needed or let NextAuth redirect based on callbackUrl
+        redirect: false,
       });
       
       if (loginRes?.error) {
-        setApiError("Logged in failed after registration. Please log in manually.");
+        Alert.fire({
+          icon: "warning",
+          title: "Account Created",
+          text: "Registration successful, but automatic login failed. Please log in manually.",
+        });
         setIsLoading(false);
       } else {
+        await Toast.fire({
+          icon: "success",
+          title: "Account created successfully",
+        });
         window.location.href = "/";
       }
     } catch (error) {
-      setApiError("Something went wrong. Please try again.");
+      Alert.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong. Please try again.",
+      });
       setIsLoading(false);
     }
   };
@@ -125,11 +141,6 @@ export default function RegisterPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-              {apiError && (
-                <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm px-4 py-3 rounded-xl mb-2 text-center">
-                  {apiError}
-                </div>
-              )}
 
               {/* Google */}
               <button

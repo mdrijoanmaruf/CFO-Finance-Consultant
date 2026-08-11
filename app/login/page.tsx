@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import BgAnimation from "@/Components/Shared/BG-Animation";
+import { Alert, Toast } from "@/lib/swal";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,7 +25,6 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setApiError("");
     if (!validate()) return;
     
     setIsLoading(true);
@@ -36,13 +36,25 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setApiError(res.error === "CredentialsSignin" ? "Invalid email or password" : res.error);
+        Alert.fire({
+          icon: "error",
+          title: "Sign In Failed",
+          text: res.error === "CredentialsSignin" ? "Invalid email or password" : res.error,
+        });
         setIsLoading(false);
       } else {
+        await Toast.fire({
+          icon: "success",
+          title: "Successfully signed in",
+        });
         window.location.href = "/";
       }
     } catch (error) {
-      setApiError("Something went wrong. Please try again.");
+      Alert.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong. Please try again.",
+      });
       setIsLoading(false);
     }
   };
@@ -96,11 +108,6 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-              {apiError && (
-                <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm px-4 py-3 rounded-xl mb-2 text-center">
-                  {apiError}
-                </div>
-              )}
 
               {/* Google */}
               <button
