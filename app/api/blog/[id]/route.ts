@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/db";
 import Blog from "@/models/Blog";
+import mongoose from "mongoose";
 
 export async function GET(
   req: NextRequest,
@@ -11,7 +12,15 @@ export async function GET(
   try {
     const { id } = await context.params;
     await dbConnect();
-    const blog = await Blog.findById(id);
+    
+    let blog;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      blog = await Blog.findById(id);
+    }
+    
+    if (!blog) {
+      blog = await Blog.findOne({ slug: id });
+    }
 
     if (!blog) {
       return NextResponse.json(
