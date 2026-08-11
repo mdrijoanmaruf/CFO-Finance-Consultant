@@ -14,7 +14,7 @@ export default function Hero() {
         aria-hidden="true"
         style={{
           background:
-            "radial-gradient(ellipse 70% 60% at 60% 40%, rgba(200,169,110,0.07) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(10,30,70,0.6) 0%, transparent 60%)",
+            "radial-gradient(ellipse 70% 60% at 60% 40%, rgba(200,169,110,0.07) 0%, transparent 70%), radial-gradient(ellipse 50% 50% at 10% 50%, rgba(10,30,70,0.6) 0%, transparent 50%)",
         }}
       />
 
@@ -28,7 +28,7 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 w-full py-12 sm:py-20 lg:py-24">
+      <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 w-full pt-12 pb-8 sm:pt-20 sm:pb-12 lg:pt-24 lg:pb-12">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-10 sm:gap-12 xl:gap-20 items-center">
           {/* ── Left: Text content ── */}
           <div className="flex flex-col gap-7">
@@ -199,14 +199,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Bottom fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background: "linear-gradient(to bottom, transparent, rgba(6,14,28,0.6))",
-        }}
-      />
+
     </section>
   );
 }
