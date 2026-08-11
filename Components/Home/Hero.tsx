@@ -42,12 +42,10 @@ export default function Hero() {
 
             {/* Main headline */}
             <div>
-              <h1 className="text-white font-bold leading-[1.12] tracking-tight">
-                <span className="block text-4xl sm:text-5xl lg:text-[56px] xl:text-[60px]">
-                  MD. Al Amin
-                </span>
+              <h1 className="text-white font-bold leading-[1.15] tracking-tight text-3xl sm:text-4xl lg:text-[42px] xl:text-[46px]">
+                MD. Al Amin{" "}
                 <span
-                  className="block text-4xl sm:text-5xl lg:text-[56px] xl:text-[60px]"
+                  className="inline-block"
                   style={{
                     background:
                       "linear-gradient(90deg, #c8a96e 0%, #e8c98e 50%, #c8a96e 100%)",
@@ -75,56 +73,29 @@ export default function Hero() {
               across diverse industries.
             </p>
 
+            {/* Highlights Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 max-w-[540px] py-4 border-t border-b border-white/5 my-2">
+              {[
+                "20+ Years Experience",
+                "CFO-Level Perspective",
+                "Business + Finance Understanding",
+                "Governance & Control Focus",
+                "Practical, Not Theoretical",
+                "Confidential & Professional",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2.5">
+                  <span className="text-[#c8a96e] text-sm shrink-0">✦</span>
+                  <span className="text-white/80 text-[13px] font-medium tracking-wide">{item}</span>
+                </div>
+              ))}
+            </div>
+
             {/* CTA buttons */}
             <div className="flex flex-wrap gap-3 mt-1">
               <Link
-                href="/contact"
-                id="hero-cta-primary"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/25 hover:shadow-[#c8a96e]/45 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                Request a Consultation
-              </Link>
-
-              <Link
-                href="/services"
-                id="hero-cta-services"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider uppercase border border-white/15 text-white/80 hover:border-[#c8a96e]/50 hover:text-white hover:bg-white/5 transition-all duration-300"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-                Explore Services
-              </Link>
-
-              <Link
                 href="/profile"
                 id="hero-cta-profile"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider uppercase border border-white/15 text-white/80 hover:border-[#c8a96e]/50 hover:text-white hover:bg-white/5 transition-all duration-300"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider uppercase bg-gradient-to-r from-[#c8a96e] to-[#a07840] text-white shadow-lg shadow-[#c8a96e]/25 hover:shadow-[#c8a96e]/45 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
               >
                 <svg
                   className="w-4 h-4"
@@ -141,6 +112,28 @@ export default function Hero() {
                   />
                 </svg>
                 View Profile
+              </Link>
+
+              <Link
+                href="/contact"
+                id="hero-cta-primary"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider uppercase border border-white/15 text-white/80 hover:border-[#c8a96e]/50 hover:text-white hover:bg-white/5 transition-all duration-300"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                Request a Consultation
               </Link>
             </div>
           </div>
@@ -172,7 +165,7 @@ export default function Hero() {
               {/* Image container */}
               <div className="relative w-[320px] xl:w-[360px] aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/10">
                 <Image
-                  src="/al-amin.png"
+                  src="/al-amin.jpg"
                   alt="MD. Al Amin Bhuiyan – CFO & Corporate Finance Consultant"
                   fill
                   className="object-cover object-top"
