@@ -28,6 +28,10 @@ export default function Navbar() {
     setMobileOpen(false);
   }, [pathname]);
 
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#060e1c] border-b border-white/8 shadow-2xl shadow-black/40">
