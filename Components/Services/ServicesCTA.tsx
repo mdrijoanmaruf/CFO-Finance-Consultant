@@ -74,19 +74,19 @@ export default function ServicesCTA() {
             {/* Contact info */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                href="mailto:contact@alaminbhuiyan.com"
+                href="mailto:alamin.hs@gmail.com"
                 className="inline-flex items-center gap-2 text-white/50 text-sm hover:text-[#c8a96e] transition-colors duration-300"
               >
                 <FiMail className="w-4 h-4" />
-                contact@alaminbhuiyan.com
+                alamin.hs@gmail.com
               </a>
               <span className="hidden sm:block w-px h-4 bg-white/15" />
               <a
-                href="tel:+8801700000000"
+                href="tel:01911089774"
                 className="inline-flex items-center gap-2 text-white/50 text-sm hover:text-[#c8a96e] transition-colors duration-300"
               >
                 <FiPhone className="w-4 h-4" />
-                +880 17 0000 0000
+                01911089774
               </a>
             </div>
           </div>
