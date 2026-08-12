@@ -44,13 +44,12 @@ const ConsultationSchema: Schema = new Schema(
 );
 
 // Auto-generate reference ID before saving
-ConsultationSchema.pre("save", async function (next) {
+ConsultationSchema.pre("save", async function () {
   if (!this.refId) {
     const year = new Date().getFullYear();
     const count = await mongoose.model("Consultation").countDocuments();
     this.refId = `CONS-${year}-${String(count + 1).padStart(4, "0")}`;
   }
-  next();
 });
 
 export default mongoose.models.Consultation ||
