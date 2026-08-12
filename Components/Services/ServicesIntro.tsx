@@ -8,15 +8,7 @@ export default function ServicesIntro() {
 
   return (
     <section className="relative py-16 lg:py-20 bg-transparent overflow-hidden">
-      {/* Subtle horizontal divider accent */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(200,169,110,0.15) 30%, rgba(200,169,110,0.15) 70%, transparent)",
-        }}
-        aria-hidden="true"
-      />
+
 
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -24,13 +16,13 @@ export default function ServicesIntro() {
           <div>
             <div className="inline-flex items-center gap-3 mb-6">
               <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#c8a96e]" />
-              <span className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-sm">
+              <span className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-xs">
                 Our Approach
               </span>
               <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#c8a96e]" />
             </div>
 
-            <h2 className="text-white font-bold leading-tight text-2xl sm:text-3xl lg:text-4xl mb-5">
+            <h2 className="text-white font-bold leading-tight text-2xl sm:text-3xl mb-5">
               CFO-Level Thinking.{" "}
               <span
                 style={{
@@ -91,15 +83,7 @@ export default function ServicesIntro() {
         </div>
       </div>
 
-      {/* Bottom divider */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(200,169,110,0.12) 30%, rgba(200,169,110,0.12) 70%, transparent)",
-        }}
-        aria-hidden="true"
-      />
+
     </section>
   );
 }

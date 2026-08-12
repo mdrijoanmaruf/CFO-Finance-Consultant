@@ -4,7 +4,7 @@ import { FiArrowRight } from "react-icons/fi";
 export default function ServicesBanner() {
   return (
     <section
-      className="relative min-h-[52vh] flex flex-col justify-end overflow-hidden pt-[76px] pb-16"
+      className="relative min-h-[52vh] flex flex-col justify-end overflow-hidden pt-32 lg:pt-40 pb-16"
       aria-label="Services page banner"
     >
       {/* Radial glow matching hero */}
@@ -17,15 +17,7 @@ export default function ServicesBanner() {
         }}
       />
 
-      {/* Gold accent line under navbar */}
-      <div
-        className="absolute top-[76px] left-0 right-0 h-px pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(200,169,110,0.3) 30%, rgba(200,169,110,0.3) 70%, transparent)",
-        }}
-        aria-hidden="true"
-      />
+
 
       {/* Decorative vertical grid lines */}
       <div className="absolute inset-0 flex justify-between px-6 lg:px-10 max-w-[1400px] mx-auto pointer-events-none opacity-20">
@@ -39,13 +31,13 @@ export default function ServicesBanner() {
         {/* Eyebrow label */}
         <div className="inline-flex items-center gap-3 mb-6">
           <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#c8a96e]" />
-          <span className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-sm">
+          <span className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-xs">
             Consulting Services
           </span>
           <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#c8a96e]" />
         </div>
 
-        <h1 className="text-white font-bold leading-[1.15] tracking-tight text-3xl sm:text-4xl lg:text-[52px] xl:text-[58px] max-w-4xl mb-6">
+        <h1 className="text-white font-bold leading-[1.15] tracking-tight text-3xl sm:text-4xl lg:text-4xl xl:text-5xl max-w-4xl mb-6">
           Expert Financial{" "}
           <span
             className="inline-block"

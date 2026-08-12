@@ -4,15 +4,7 @@ import { FiArrowRight, FiMail, FiPhone } from "react-icons/fi";
 export default function ServicesCTA() {
   return (
     <section className="relative py-16 lg:py-24 overflow-hidden">
-      {/* Top border accent */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(200,169,110,0.2) 30%, rgba(200,169,110,0.2) 70%, transparent)",
-        }}
-        aria-hidden="true"
-      />
+
 
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 z-10">
         <div className="relative overflow-hidden rounded-3xl border border-[#c8a96e]/20 bg-white/[0.02] p-8 sm:p-12 lg:p-16 text-center">
@@ -44,7 +36,7 @@ export default function ServicesCTA() {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight">
+            <h2 className="text-3xl sm:text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
               Ready to Transform{" "}
               <span
                 style={{

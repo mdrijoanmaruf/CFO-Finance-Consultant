@@ -159,12 +159,12 @@ export default function ServicesList() {
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
           <div className="inline-flex items-center justify-center gap-3 mb-6">
             <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#c8a96e]" />
-            <h2 className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-sm">
+            <h2 className="text-[#c8a96e] font-semibold tracking-[0.2em] uppercase text-xs">
               Service Areas
             </h2>
             <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#c8a96e]" />
           </div>
-          <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight">
+          <h3 className="text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
             Comprehensive Advisory{" "}
             <span
               style={{
