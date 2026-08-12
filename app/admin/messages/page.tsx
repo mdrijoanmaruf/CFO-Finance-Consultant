@@ -16,6 +16,7 @@ import {
   FiPhone,
   FiSave,
 } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 interface Consultation {
@@ -34,11 +35,6 @@ interface Consultation {
   createdAt: string;
 }
 
-interface ViewModal {
-  isOpen: boolean;
-  message: Consultation | null;
-}
-
 export default function MessagesPage() {
   const { data: session, status: sessionStatus } = useSession();
   const [messages, setMessages] = useState<Consultation[]>([]);
@@ -49,14 +45,7 @@ export default function MessagesPage() {
   const [newCount, setNewCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const messagesPerPage = 10;
-
-  const [viewModal, setViewModal] = useState<ViewModal>({
-    isOpen: false,
-    message: null,
-  });
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [editNotes, setEditNotes] = useState("");
-  const [editStatus, setEditStatus] = useState<string>("new");
+  const router = useRouter();
 
   useEffect(() => {
     if (sessionStatus === "loading") return;
@@ -106,42 +95,7 @@ export default function MessagesPage() {
   };
 
   const handleView = (message: Consultation) => {
-    setEditNotes(message.internalNotes || "");
-    setEditStatus(message.status);
-    setViewModal({ isOpen: true, message });
-  };
-
-  const handleUpdate = async () => {
-    if (!viewModal.message) return;
-
-    try {
-      setIsUpdating(true);
-      const res = await fetch(`/api/consultations/${viewModal.message._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: editStatus,
-          internalNotes: editNotes,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success("Consultation updated successfully");
-        setViewModal({ isOpen: false, message: null });
-        fetchMessages();
-      } else {
-        toast.error(data.error || "Failed to update consultation");
-      }
-    } catch (error) {
-      console.error("Error updating consultation:", error);
-      toast.error("Failed to update consultation");
-    } finally {
-      setIsUpdating(false);
-    }
+    router.push(`/admin/messages/${message._id}`);
   };
 
   // Pagination logic
@@ -169,175 +123,179 @@ export default function MessagesPage() {
   };
 
   const statusColors: Record<string, string> = {
-    new: "bg-blue-100 text-blue-700",
-    contacted: "bg-yellow-100 text-yellow-700",
-    scheduled: "bg-purple-100 text-purple-700",
-    proposal_sent: "bg-orange-100 text-orange-700",
-    won: "bg-green-100 text-green-700",
-    lost: "bg-red-100 text-red-700",
-    archived: "bg-gray-100 text-gray-700",
+    new: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
+    contacted: "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20",
+    scheduled: "bg-purple-500/10 text-purple-400 border border-purple-500/20",
+    proposal_sent: "bg-orange-500/10 text-orange-400 border border-orange-500/20",
+    won: "bg-green-500/10 text-green-400 border border-green-500/20",
+    lost: "bg-red-500/10 text-red-400 border border-red-500/20",
+    archived: "bg-gray-500/10 text-gray-400 border border-gray-500/20",
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Consultation Requests</h1>
-          <p className="text-sm text-gray-600 mt-0.5">
+          <h1 className="text-2xl font-bold text-white">Consultation Requests</h1>
+          <p className="text-sm text-white/60 mt-0.5">
             Manage inquiries from the website contact form
           </p>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Search */}
         <div className="lg:col-span-2">
-          <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <div className="relative flex items-center">
+            <FiSearch className="absolute left-4 text-white/40 w-4 h-4 pointer-events-none" />
             <input
               type="text"
               placeholder="Search by name, email, org, or Ref ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 text-sm bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              className="w-full pl-11 pr-4 py-3 text-sm bg-white/[0.02] border border-white/10 text-white placeholder-white/30 rounded-xl focus:border-[#c8a96e]/50 focus:bg-white/5 outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Status Filter */}
-        <div className="relative">
-          <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <div className="relative flex items-center">
+          <FiFilter className="absolute left-4 text-white/40 w-4 h-4 pointer-events-none" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             aria-label="Filter messages by status"
-            className="w-full pl-10 pr-3 py-2 text-sm bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all appearance-none cursor-pointer"
+            className="w-full pl-11 pr-4 py-3 text-sm bg-white/[0.02] border border-white/10 text-white rounded-xl focus:border-[#c8a96e]/50 focus:bg-white/5 outline-none transition-all appearance-none cursor-pointer"
+            style={{ colorScheme: "dark" }}
           >
-            <option value="all">All Statuses</option>
-            <option value="new">New</option>
-            <option value="contacted">Contacted</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="proposal_sent">Proposal Sent</option>
-            <option value="won">Won</option>
-            <option value="lost">Lost</option>
-            <option value="archived">Archived</option>
+            <option value="all" className="bg-[#0a1628] text-white">All Statuses</option>
+            <option value="new" className="bg-[#0a1628] text-white">New</option>
+            <option value="contacted" className="bg-[#0a1628] text-white">Contacted</option>
+            <option value="scheduled" className="bg-[#0a1628] text-white">Scheduled</option>
+            <option value="proposal_sent" className="bg-[#0a1628] text-white">Proposal Sent</option>
+            <option value="won" className="bg-[#0a1628] text-white">Won</option>
+            <option value="lost" className="bg-[#0a1628] text-white">Lost</option>
+            <option value="archived" className="bg-[#0a1628] text-white">Archived</option>
           </select>
         </div>
 
         {/* Stats */}
-        <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-lg p-3 text-white flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#c8a96e]/20 to-[#a07840]/10 border border-[#c8a96e]/20 rounded-xl p-4 text-white flex items-center justify-between">
           <div>
-            <p className="text-xs opacity-90">New Requests</p>
-            <p className="text-2xl font-bold mt-0.5">{newCount}</p>
+            <p className="text-xs text-[#c8a96e] font-semibold uppercase tracking-wider">New Requests</p>
+            <p className="text-2xl font-bold mt-1 text-white">{newCount}</p>
           </div>
-          <FiMail className="w-8 h-8 opacity-20" />
+          <div className="w-10 h-10 rounded-full bg-[#c8a96e]/20 flex items-center justify-center">
+            <FiMail className="w-5 h-5 text-[#c8a96e]" />
+          </div>
         </div>
       </div>
 
       {/* Messages Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white/[0.02] rounded-2xl border border-white/10 overflow-hidden shadow-lg shadow-black/20">
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <FiLoader className="w-6 h-6 text-indigo-600 animate-spin" />
+          <div className="flex items-center justify-center h-64">
+            <FiLoader className="w-6 h-6 text-[#c8a96e] animate-spin" />
           </div>
         ) : currentMessages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-gray-500">
-            <FiMessageSquare className="w-10 h-10 text-gray-300 mb-2" />
-            <p className="text-base font-medium">No requests found</p>
-            <p className="text-xs mt-1">Consultation requests will appear here</p>
+          <div className="flex flex-col items-center justify-center h-64 text-white/50">
+            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+              <FiMessageSquare className="w-8 h-8 text-white/30" />
+            </div>
+            <p className="text-base font-medium text-white">No requests found</p>
+            <p className="text-sm mt-1">Consultation requests will appear here</p>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-white/5 border-b border-white/10">
                   <tr>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Ref / Client
                     </th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Organization
                     </th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Area of Interest
                     </th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="px-5 py-4 text-right text-xs font-semibold text-white/70 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/10">
                   {currentMessages.map((msg) => (
                     <tr
                       key={msg._id}
                       className={`transition-colors ${
                         msg.status === "new"
-                          ? "bg-blue-50/30 hover:bg-blue-50/60"
-                          : "hover:bg-gray-50"
+                          ? "bg-white/[0.04] hover:bg-white/[0.06]"
+                          : "hover:bg-white/[0.03]"
                       }`}
                     >
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-[10px] font-mono text-gray-400">
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono text-[#c8a96e]">
                             {msg.refId}
                           </span>
                           <p
                             className={`text-sm ${
                               msg.status === "new"
-                                ? "font-semibold text-gray-900"
-                                : "font-medium text-gray-700"
+                                ? "font-semibold text-white"
+                                : "font-medium text-white/80"
                             }`}
                           >
                             {msg.name}
                           </p>
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-4 whitespace-nowrap">
                         <div className="flex flex-col gap-0.5">
-                          <p className="text-sm text-gray-800">
+                          <p className="text-sm text-white/90">
                             {truncateMessage(msg.organization, 25)}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-white/50">
                             {truncateMessage(msg.designation, 25)}
                           </p>
                         </div>
                       </td>
-                      <td className="px-4 py-2.5">
-                        <p className="text-xs text-gray-600 font-medium">
+                      <td className="px-5 py-4">
+                        <p className="text-xs text-white/70 font-medium">
                           {msg.areaOfInterest}
                         </p>
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${
-                            statusColors[msg.status] || "bg-gray-100 text-gray-600"
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${
+                            statusColors[msg.status] || "bg-white/10 text-white/70 border border-white/20"
                           }`}
                         >
                           {msg.status.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                          <FiCalendar className="w-3.5 h-3.5 text-gray-400" />
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 text-xs text-white/60">
+                          <FiCalendar className="w-3.5 h-3.5 text-white/40" />
                           {formatDate(msg.createdAt)}
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap text-right">
+                      <td className="px-5 py-4 whitespace-nowrap text-right">
                         <button
                           type="button"
                           onClick={() => handleView(msg)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 rounded-md transition-all"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-[#c8a96e]/20 hover:border-[#c8a96e]/40 hover:text-[#c8a96e] transition-all"
                         >
-                          <FiEye className="w-3.5 h-3.5" />
-                          View
+                          <FiEye className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
@@ -348,40 +306,42 @@ export default function MessagesPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
-                <p className="text-xs text-gray-600">
+              <div className="px-5 py-4 border-t border-white/10 bg-white/[0.01] flex items-center justify-between">
+                <p className="text-xs text-white/50">
                   Showing {indexOfFirstMessage + 1} to{" "}
                   {Math.min(indexOfLastMessage, filteredMessages.length)} of{" "}
                   {filteredMessages.length} requests
                 </p>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => paginate(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-2.5 py-1 text-xs border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-xs font-medium text-white/70 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Previous
                   </button>
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      type="button"
-                      key={index + 1}
-                      onClick={() => paginate(index + 1)}
-                      className={`px-2.5 py-1 text-xs rounded-md transition-colors ${
-                        currentPage === index + 1
-                          ? "bg-blue-600 text-white"
-                          : "border border-gray-200 hover:bg-gray-50"
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
+                  <div className="flex items-center gap-1">
+                    {[...Array(totalPages)].map((_, index) => (
+                      <button
+                        type="button"
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={`w-8 h-8 text-xs font-medium rounded-lg transition-colors ${
+                          currentPage === index + 1
+                            ? "bg-[#c8a96e] text-white"
+                            : "bg-transparent text-white/60 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={() => paginate(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-2.5 py-1 text-xs border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-xs font-medium text-white/70 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Next
                   </button>
@@ -391,148 +351,6 @@ export default function MessagesPage() {
           </>
         )}
       </div>
-
-      {/* View/Edit Modal */}
-      {viewModal.isOpen && viewModal.message && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50">
-              <div>
-                <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                  Consultation Request
-                  <span className="text-xs font-mono bg-gray-200 text-gray-600 px-2 py-0.5 rounded">
-                    {viewModal.message.refId}
-                  </span>
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setViewModal({ isOpen: false, message: null })}
-                className="p-1.5 hover:bg-gray-200 rounded-md transition-colors text-gray-500"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column: Client Details */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-700 to-blue-900 flex items-center justify-center text-white font-semibold shrink-0">
-                    {viewModal.message.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">{viewModal.message.name}</p>
-                    <p className="text-sm text-gray-600">{viewModal.message.designation}</p>
-                    <p className="text-sm font-medium text-gray-800">{viewModal.message.organization}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <a
-                    href={`mailto:${viewModal.message.email}`}
-                    className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
-                  >
-                    <FiMail className="w-4 h-4" />
-                    {viewModal.message.email}
-                  </a>
-                  <a
-                    href={`tel:${viewModal.message.phone}`}
-                    className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
-                  >
-                    <FiPhone className="w-4 h-4" />
-                    {viewModal.message.phone}
-                  </a>
-                </div>
-              </div>
-
-              {/* Right Column: Status & Notes */}
-              <div className="space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
-                    Update Status
-                  </label>
-                  <select
-                    value={editStatus}
-                    onChange={(e) => setEditStatus(e.target.value)}
-                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                  >
-                    <option value="new">New</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="proposal_sent">Proposal Sent</option>
-                    <option value="won">Won</option>
-                    <option value="lost">Lost</option>
-                    <option value="archived">Archived</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
-                    Internal Notes
-                  </label>
-                  <textarea
-                    value={editNotes}
-                    onChange={(e) => setEditNotes(e.target.value)}
-                    placeholder="Add private notes here..."
-                    rows={3}
-                    className="w-full px-3 py-2 text-sm bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
-                  />
-                </div>
-              </div>
-
-              {/* Full Width: Request Details */}
-              <div className="md:col-span-2 space-y-4 border-t border-gray-100 pt-4">
-                <div>
-                  <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    Area of Interest
-                  </h4>
-                  <p className="text-sm font-medium text-gray-900 bg-gray-100 inline-block px-3 py-1 rounded-md">
-                    {viewModal.message.areaOfInterest}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    Requirement Description
-                  </h4>
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed shadow-sm">
-                    {viewModal.message.requirement}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400">
-                  Submitted on {formatDate(viewModal.message.createdAt)} via {viewModal.message.source}
-                </p>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-3 justify-end rounded-b-xl">
-              <button
-                type="button"
-                onClick={() => setViewModal({ isOpen: false, message: null })}
-                className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleUpdate}
-                disabled={
-                  isUpdating ||
-                  (editStatus === viewModal.message.status &&
-                    editNotes === (viewModal.message.internalNotes || ""))
-                }
-                className="px-5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {isUpdating ? (
-                  <FiLoader className="w-4 h-4 animate-spin" />
-                ) : (
-                  <FiSave className="w-4 h-4" />
-                )}
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
