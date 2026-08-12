@@ -56,6 +56,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: "/admin/users", label: "Users & Security", Icon: FiUsers },
     { href: "/admin/consultations", label: "Consultations", Icon: FiBriefcase },
     { href: "/admin/messages", label: "Messages", Icon: FiMessageSquare },
+    { href: "/admin/insights", label: "Insights", Icon: FiFileText },
     { href: "/admin/blog", label: "Blog", Icon: FiFileText },
     { href: "/admin/achievements", label: "Achievements", Icon: FiAward },
     { href: "/admin/media", label: "Media", Icon: FiImage },
