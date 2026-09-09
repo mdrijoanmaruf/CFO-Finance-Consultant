@@ -54,14 +54,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navItems = [
     { href: "/admin", label: "Dashboard", Icon: FiGrid, exact: true },
     { href: "/admin/users", label: "Users & Security", Icon: FiUsers },
-    { href: "/admin/consultations", label: "Consultations", Icon: FiBriefcase },
+    // { href: "/admin/consultations", label: "Consultations", Icon: FiBriefcase },
     { href: "/admin/messages", label: "Messages", Icon: FiMessageSquare },
     { href: "/admin/insights", label: "Insights", Icon: FiFileText },
-    { href: "/admin/blog", label: "Blog", Icon: FiFileText },
-    { href: "/admin/achievements", label: "Achievements", Icon: FiAward },
-    { href: "/admin/media", label: "Media", Icon: FiImage },
-    { href: "/admin/services", label: "Services", Icon: FiBriefcase },
-    { href: "/admin/profile", label: "Profile & CV", Icon: FiUser },
+    // { href: "/admin/achievements", label: "Achievements", Icon: FiAward },
+    // { href: "/admin/media", label: "Media", Icon: FiImage },
+    // { href: "/admin/services", label: "Services", Icon: FiBriefcase },
+    // { href: "/admin/profile", label: "Profile & CV", Icon: FiUser },
   ];
 
   const handleLogout = async () => {
@@ -172,47 +171,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* Main Content Area */}
       <div className="lg:ml-64 flex-1 min-h-screen flex flex-col relative z-10 w-full">
-        {/* Top Header */}
-        <header className="h-20 bg-[#060e1c]/40 border-b border-white/10 sticky top-0 z-30 px-6 lg:px-8 flex items-center justify-between shadow-sm w-full">
-          {/* Left Side */}
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-            >
-              <FiMenu className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Right Side */}
-          <div className="flex items-center gap-4">
-            {/* User Info */}
-            {session?.user && (
-              <div className="flex items-center gap-3 pl-4 border-l border-white/10 py-1">
-                {session?.user?.image ? (
-                  <img
-                    src={session?.user?.image}
-                    alt="Admin"
-                    className="w-9 h-9 rounded-full border border-white/20"
-                  />
-                ) : (
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#c8a96e] to-[#a07840] flex items-center justify-center text-white font-bold text-sm shadow-md">
-                    {session?.user?.name?.charAt(0).toUpperCase() || "A"}
-                  </div>
-                )}
-                <div className="text-right hidden sm:block">
-                  <p className="text-[13px] font-semibold text-white tracking-wide">
-                    {session?.user?.name}
-                  </p>
-                  <p className="text-[10px] text-[#c8a96e] uppercase tracking-widest">
-                    Administrator
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </header>
+        {/* Mobile top bar (menu button only — visible on small screens) */}
+        <div className="lg:hidden h-16 bg-[#060e1c]/60 border-b border-white/10 sticky top-0 z-30 px-4 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <FiMenu className="w-5 h-5" />
+          </button>
+          <span className="text-xs text-[#c8a96e] font-semibold uppercase tracking-widest">Admin Panel</span>
+        </div>
 
         {/* Page Content */}
         <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">

@@ -12,7 +12,6 @@ const navLinks = [
   { label: "Profile", href: "/profile" },
   { label: "Insights", href: "/insights" },
   { label: "Achievements", href: "/achievements" },
-  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
