@@ -6,9 +6,20 @@ import EngagementModels from "@/Components/Services/EngagementModels";
 import ServicesCTA from "@/Components/Services/ServicesCTA";
 
 export const metadata = {
-  title: "Consulting Services | MD. Al Amin Bhuiyan – CFO & Finance Consultant",
+  title: "Consulting Services | Fractional CFO & Financial Advisory",
   description:
-    "Explore our full range of financial advisory and consulting services — from Fractional CFO and Corporate Governance to Treasury, Tax, and Donor-Funded Project Advisory.",
+    "Explore our full range of financial advisory and consulting services — from Fractional CFO and Corporate Governance to Treasury, Tax, and Donor-Funded Project Advisory in Bangladesh.",
+  keywords: [
+    "Fractional CFO services",
+    "Financial management consulting",
+    "Tax advisory Bangladesh",
+    "Corporate finance consultant",
+    "Treasury management services",
+    "Donor-funded project advisory",
+  ],
+  alternates: {
+    canonical: "https://al-amin-pi.vercel.app/services",
+  },
 };
 
 export default function ServicesPage() {

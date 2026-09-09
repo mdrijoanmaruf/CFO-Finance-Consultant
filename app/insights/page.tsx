@@ -2,9 +2,19 @@ import BgAnimation from "@/Components/Shared/BG-Animation";
 import InsightsShell from "@/Components/Insights/InsightsShell";
 
 export const metadata = {
-  title: "Insights | MD. Al Amin Bhuiyan – CFO & Finance Consultant",
+  title: "Insights & Articles | Corporate Finance & Governance",
   description:
     "Practical perspectives on corporate finance, governance, treasury, tax, and strategic leadership — drawn from 22+ years of real-world CFO and advisory experience by MD. Al Amin Bhuiyan.",
+  keywords: [
+    "CFO insights",
+    "Corporate finance blog",
+    "Corporate governance articles",
+    "Treasury management perspectives",
+    "Business leadership insights Bangladesh",
+  ],
+  alternates: {
+    canonical: "https://al-amin-pi.vercel.app/insights",
+  },
 };
 
 export default function InsightsPage() {

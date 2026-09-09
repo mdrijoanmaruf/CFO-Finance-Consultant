@@ -160,7 +160,7 @@ export default function Hero() {
               <div className="relative w-[320px] xl:w-[360px] aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/10">
                 <Image
                   src="/al-amin.jpg"
-                  alt="MD. Al Amin Bhuiyan – CFO & Corporate Finance Consultant"
+                  alt="MD. Al Amin Bhuiyan - Expert Corporate Finance Consultant and Fractional CFO in Bangladesh"
                   fill
                   className="object-cover object-top"
                   priority

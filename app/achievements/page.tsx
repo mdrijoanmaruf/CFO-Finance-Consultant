@@ -12,9 +12,19 @@ import SpeakingEngagements from "@/Components/Achievements/SpeakingEngagements";
 import AchievementsCTA from "@/Components/Achievements/AchievementsCTA";
 
 export const metadata = {
-  title: "Achievements | MD. Al Amin Bhuiyan – CFO & Finance Consultant",
+  title: "Career Achievements | MD. Al Amin Bhuiyan CFO",
   description:
     "Explore the career achievements, leadership milestones, professional certifications, publications, and speaking engagements of MD. Al Amin Bhuiyan — a multidisciplinary CFO and finance consultant with 22+ years of demonstrated impact.",
+  keywords: [
+    "CFO career highlights",
+    "Corporate finance milestones",
+    "Finance leadership achievements",
+    "MD Al Amin Bhuiyan portfolio",
+    "Finance professional certifications Bangladesh",
+  ],
+  alternates: {
+    canonical: "https://al-amin-pi.vercel.app/achievements",
+  },
 };
 
 export default function AchievementsPage() {

@@ -69,9 +69,24 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) return {};
+  
+  const url = `https://al-amin-pi.vercel.app/insights/${slug}`;
+  
   return {
     title: `${article.title} | Insights – MD. Al Amin Bhuiyan`,
     description: article.excerpt,
+    keywords: [article.category, "Corporate Finance", "CFO Insights"],
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      url: url,
+      type: "article",
+      publishedTime: article.date,
+      authors: ["https://al-amin-pi.vercel.app/about"],
+    },
   };
 }
 
@@ -88,8 +103,34 @@ export default async function InsightDetailPage({ params }: Props) {
   // Convert markdown-like body to paragraphs/headings
   const bodyLines = body.split("\n");
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    author: {
+      "@type": "Person",
+      name: "MD. Al Amin Bhuiyan",
+      url: "https://al-amin-pi.vercel.app/about",
+    },
+    datePublished: article.date,
+    dateModified: article.date,
+    publisher: {
+      "@type": "Organization",
+      name: "MD. Al Amin Bhuiyan",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://al-amin-pi.vercel.app/insights/${slug}`,
+    },
+  };
+
   return (
     <main className="relative bg-[#060e1c]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <BgAnimation />
 
       {/* Cover */}
